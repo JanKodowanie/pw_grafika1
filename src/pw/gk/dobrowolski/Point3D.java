@@ -1,6 +1,4 @@
-package pw.gk.jan_dobrowolski;
-
-import processing.core.PVector;
+package pw.gk.dobrowolski;
 
 public class Point3D {
     public float[][] coords;
@@ -11,6 +9,10 @@ public class Point3D {
         coords[1][0] = y;
         coords[2][0] = z;
         coords[3][0] = 1.0f;
+    }
+
+    Point3D (float[][] coords) {
+        this.coords = coords;
     }
 
     public float getX() {
@@ -29,8 +31,8 @@ public class Point3D {
         return coords[3][0];
     }
 
-    public PVector getNormalizedProjection() {
-        return new PVector(this.getX() / this.getN(), this.getY() / this.getN());
-
+    @Override
+    public String toString() {
+        return String.format("x: %.2f, y: %.2f, z: %.2f", getX(), getY(), getZ());
     }
 }

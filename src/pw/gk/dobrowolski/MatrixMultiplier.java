@@ -1,4 +1,4 @@
-package pw.gk.jan_dobrowolski;
+package pw.gk.dobrowolski;
 
 public class MatrixMultiplier {
     public static float[][] multiplyMatrices(float[][] A, float [][] B) {

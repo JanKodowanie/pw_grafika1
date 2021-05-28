@@ -1,4 +1,4 @@
-package pw.gk.jan_dobrowolski;
+package pw.gk.dobrowolski;
 
 public class Edge {
     private Point3D a;
@@ -23,5 +23,10 @@ public class Edge {
 
     public void setB(Point3D b) {
         this.b = b;
+    }
+
+    @Override
+    public String toString() {
+        return a.toString() + "; " + b.toString();
     }
 }

@@ -1,10 +1,10 @@
-package pw.gk.jan_dobrowolski;
+package pw.gk.dobrowolski;
 
 public class Cube {
     private Edge[] edges;
-    private int[] color;
+    private Integer[] color;
 
-    public Cube(Edge[] edges, int[] color) {
+    public Cube(Edge[] edges, Integer[] color) {
         if (edges.length != 12)
             throw new RuntimeException("Invalid number of edges. Should be 12.");
 
@@ -23,11 +23,11 @@ public class Cube {
         this.edges = edges;
     }
 
-    public int[] getColor() {
+    public Integer[] getColor() {
         return color;
     }
 
-    public void setColor(int[] color) {
+    public void setColor(Integer[] color) {
         this.color = color;
     }
 }

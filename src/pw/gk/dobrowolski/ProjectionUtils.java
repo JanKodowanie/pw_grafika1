@@ -1,4 +1,6 @@
-package pw.gk.jan_dobrowolski;
+package pw.gk.dobrowolski;
+
+import processing.core.PVector;
 
 import static processing.core.PApplet.sin;
 import static processing.core.PApplet.cos;
@@ -12,7 +14,13 @@ public class ProjectionUtils {
     public float angleY;
     public float angleZ;
 
-    public float[][] getFinalTransform() {
+    public PVector getNormalizedProjection(Point3D point) {
+        float[][] res =  MatrixMultiplier.multiplyMatrices(getFinalTransform(), point.coords);
+        Point3D pointTransformed = new Point3D(res);
+        return new PVector(pointTransformed.getX() / pointTransformed.getN(), pointTransformed.getY() / pointTransformed.getN());
+    }
+
+    private float[][] getFinalTransform() {
         float[][] tmp = MatrixMultiplier.multiplyMatrices(getRotMatrix(), getTranslationMatrix());
 
         return MatrixMultiplier.multiplyMatrices(tmp, getProjectionMatrix());
@@ -28,7 +36,7 @@ public class ProjectionUtils {
         float[][] rotY = {
             {cos(angleY), 0.0f, sin(angleY), 0.0f},
             {0.0f, 1.0f, 0.0f, 0.0f},
-            {-sin(angleY), 0, cos(angleY), 0},
+            {-sin(angleY), 0.0f, cos(angleY), 0.0f},
             {0.0f, 0.0f, 0.0f, 1.0f}
         };
         float[][] rotZ = {
