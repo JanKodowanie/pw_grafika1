@@ -30,8 +30,8 @@ public class Camera extends PApplet {
         projector.focalLen = 500.0f;
         projector.Tx = 0.0f;
         projector.Ty = -50.0f;
-        projector.Tz = 0.0f;
-        projector.angleX = 0.0f;
+        projector.Tz = 100.0f;
+        projector.angleX = (float) Math.PI / 8;
         projector.angleY = 0.0f;
         projector.angleZ = 0.0f;
         readCubes();

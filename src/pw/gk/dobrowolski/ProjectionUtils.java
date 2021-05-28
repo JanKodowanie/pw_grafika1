@@ -15,18 +15,18 @@ public class ProjectionUtils {
     public float angleZ;
 
     public PVector getNormalizedProjection(Point3D point) {
-        float[][] res =  MatrixMultiplier.multiplyMatrices(getFinalTransform(), point.coords);
+        float[][] res =  projectPoint(point);
         Point3D pointTransformed = new Point3D(res);
         return new PVector(pointTransformed.getX() / pointTransformed.getN(), pointTransformed.getY() / pointTransformed.getN());
     }
 
-    private float[][] getFinalTransform() {
-        float[][] tmp = MatrixMultiplier.multiplyMatrices(getRotMatrix(), getTranslationMatrix());
-
-        return MatrixMultiplier.multiplyMatrices(tmp, getProjectionMatrix());
+    private float[][] projectPoint(Point3D point) {
+        float[][] projection = MatrixMultiplier.multiplyMatrices(getTranslationMatrix(), rotatePoint(point));
+        return MatrixMultiplier.multiplyMatrices(getProjectionMatrix(), projection);
     }
 
-    private float[][] getRotMatrix() {
+    private float[][] rotatePoint(Point3D point) {
+
         float[][] rotX = {
             {1.0f, 0.0f, 0.0f, 0.0f},
             {0.0f, cos(angleX), -sin(angleX), 0.0f},
@@ -46,7 +46,8 @@ public class ProjectionUtils {
             {0.0f, 0.0f, 0.0f, 1.0f}
         };
 
-        return MatrixMultiplier.multiplyMatrices(MatrixMultiplier.multiplyMatrices(rotX, rotY), rotZ);
+        float[][] rotated = MatrixMultiplier.multiplyMatrices(rotY, MatrixMultiplier.multiplyMatrices(rotX, point.coords));
+        return MatrixMultiplier.multiplyMatrices(rotZ, rotated);
     }
 
     private float[][] getTranslationMatrix() {
