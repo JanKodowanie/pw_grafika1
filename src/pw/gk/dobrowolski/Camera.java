@@ -12,8 +12,14 @@ public class Camera extends PApplet {
 
     List<Cube> cubes;
     ProjectionUtils projector;
-    final int WIDTH = 800;
-    final int HEIGHT = 600;
+    final int WIDTH = 1600;
+    final int HEIGHT = 900;
+    final float INIT_FOCAL_LEN = 500.0f;
+    final float MIN_FOCAL_LEN = 10.0f;
+    final float MAX_FOCAL_LEN = 1000.0f;
+    final float FOCAL_STEP = 50.0f;
+    final float TRANSLATION_STEP = 5.0f;
+    final float ANGLE_STEP = (float) Math.PI / 60;
 
     public static void main(String[] args) {
         String[] processingArgs = {"Camera"};
@@ -27,11 +33,11 @@ public class Camera extends PApplet {
 
     public void setup() {
         projector = new ProjectionUtils();
-        projector.focalLen = 500.0f;
+        projector.focalLen = INIT_FOCAL_LEN;
         projector.Tx = 0.0f;
-        projector.Ty = -50.0f;
-        projector.Tz = 100.0f;
-        projector.angleX = (float) Math.PI / 8;
+        projector.Ty = 0.0f;
+        projector.Tz = 0.0f;
+        projector.angleX = 0.0f;
         projector.angleY = 0.0f;
         projector.angleZ = 0.0f;
         readCubes();
@@ -40,6 +46,7 @@ public class Camera extends PApplet {
     public void draw() {
         background(0);
         translate(WIDTH/2, HEIGHT/2);
+        scale(1, -1);
         noFill();
         for (Cube c : cubes) {
             Integer[] color = c.getColor();
@@ -49,6 +56,59 @@ public class Camera extends PApplet {
                 PVector aProjected = projector.getNormalizedProjection(e.getA());
                 PVector bProjected = projector.getNormalizedProjection(e.getB());
                 line(aProjected.x, aProjected.y, bProjected.x, bProjected.y);
+            }
+        }
+    }
+
+    public void keyPressed() {
+
+        if (key == CODED) {
+            switch (keyCode) {
+                case LEFT:
+                    moveCamLeft();
+                    break;
+                case RIGHT:
+                    moveCamRight();
+                    break;
+                case UP:
+                    moveCamForward();
+                    break;
+                case DOWN:
+                    moveCamBackwards();
+                    break;
+                case CONTROL:
+                    moveCamDown();
+                    break;
+                case SHIFT:
+                    moveCamUp();
+                    break;
+            }
+        } else {
+            switch (key) {
+                case 'q':
+                    rollCameraClockwise();
+                    break;
+                case 'e':
+                    rollCameraCounterClockwise();
+                    break;
+                case 'a':
+                    yawCameraLeft();
+                    break;
+                case 'd':
+                    yawCameraRight();
+                    break;
+                case 'w':
+                    pitchCameraUp();
+                    break;
+                case 's':
+                    pitchCameraDown();
+                    break;
+                case '-':
+                    increaseZoom();
+                    break;
+                case '=':
+                    decreaseZoom();
+                    break;
             }
         }
     }
@@ -89,5 +149,60 @@ public class Camera extends PApplet {
                 new Point3D(p2coords.get(0), p2coords.get(1), p2coords.get(2)));
     }
 
+    private void moveCamLeft() {
+        projector.Tx += TRANSLATION_STEP;
+    }
+
+    private void moveCamRight() {
+        projector.Tx -= TRANSLATION_STEP;
+    }
+
+    private void moveCamDown() {
+        projector.Ty += TRANSLATION_STEP;
+    }
+
+    private void moveCamUp() {
+        projector.Ty -= TRANSLATION_STEP;
+    }
+
+    private void moveCamForward() {
+        projector.Tz -= TRANSLATION_STEP;
+    }
+
+    private void moveCamBackwards() {
+        projector.Tz += TRANSLATION_STEP;
+    }
+
+    private void rollCameraClockwise() {
+        projector.angleZ -= ANGLE_STEP;
+    }
+
+    private void rollCameraCounterClockwise() {
+        projector.angleZ += ANGLE_STEP;
+    }
+
+    private void yawCameraLeft() {
+        projector.angleY += ANGLE_STEP;
+    }
+
+    private void yawCameraRight() {
+        projector.angleY -= ANGLE_STEP;
+    }
+
+    private void pitchCameraUp() {
+        projector.angleX -= ANGLE_STEP;
+    }
+
+    private void pitchCameraDown() {
+        projector.angleX += ANGLE_STEP;
+    }
+
+    private void increaseZoom() {
+        projector.focalLen -= FOCAL_STEP;
+    }
+
+    private void decreaseZoom() {
+        projector.focalLen += FOCAL_STEP;
+    }
 
 }
