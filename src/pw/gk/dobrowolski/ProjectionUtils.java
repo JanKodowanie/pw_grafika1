@@ -2,17 +2,15 @@ package pw.gk.dobrowolski;
 
 import processing.core.PVector;
 
+import java.util.List;
+
 import static processing.core.PApplet.sin;
 import static processing.core.PApplet.cos;
 
 public class ProjectionUtils {
+
     public float focalLen;
-    public float Tx;
-    public float Ty;
-    public float Tz;
-    public float angleX;
-    public float angleY;
-    public float angleZ;
+
 
     public PVector getNormalizedProjection(Point3D point) {
         Point3D pointTransformed = projectPoint(point);
@@ -22,50 +20,83 @@ public class ProjectionUtils {
         return new PVector(pointTransformed.getX() / pointTransformed.getN(), pointTransformed.getY() / pointTransformed.getN());
     }
 
+    public void rotatePointsByX(List<Cube> cubes, float angleX) {
+        float[][] rotX = {
+                {1.0f, 0.0f, 0.0f, 0.0f},
+                {0.0f, cos(angleX), -sin(angleX), 0.0f},
+                {0.0f, sin(angleX), cos(angleX), 0.0f},
+                {0.0f, 0.0f, 0.0f, 1.0f}
+        };
+
+        applyRotation(cubes, rotX);
+    }
+
+    public void rotatePointsByY(List<Cube> cubes, float angleY) {
+
+        float[][] rotY = {
+                {cos(angleY), 0.0f, sin(angleY), 0.0f},
+                {0.0f, 1.0f, 0.0f, 0.0f},
+                {-sin(angleY), 0.0f, cos(angleY), 0.0f},
+                {0.0f, 0.0f, 0.0f, 1.0f}
+        };
+
+        applyRotation(cubes, rotY);
+    }
+
+    public void rotatePointsByZ(List<Cube> cubes, float angleZ) {
+
+        float[][] rotZ = {
+                {cos(angleZ), -sin(angleZ), 0.0f, 0.0f},
+                {sin(angleZ), cos(angleZ), 0.0f, 0.0f},
+                {0.0f, 0.0f, 1.0f, 0.0f},
+                {0.0f, 0.0f, 0.0f, 1.0f}
+        };
+
+        applyRotation(cubes, rotZ);
+    }
+
+    public void translatePointsByX(List<Cube> cubes, float step) {
+        for (Cube c : cubes) {
+            for (Edge e : c.getEdges()) {
+                Point3D a = e.getA();
+                Point3D b = e.getB();
+
+                a.setX(a.getX() + step);
+                b.setX(b.getX() + step);
+            }
+        }
+    }
+
+    public void translatePointsByY(List<Cube> cubes, float step) {
+        for (Cube c : cubes) {
+            for (Edge e : c.getEdges()) {
+                Point3D a = e.getA();
+                Point3D b = e.getB();
+
+                a.setY(a.getY() + step);
+                b.setY(b.getY() + step);
+            }
+        }
+    }
+
+    public void translatePointsByZ(List<Cube> cubes, float step) {
+        for (Cube c : cubes) {
+            for (Edge e : c.getEdges()) {
+                Point3D a = e.getA();
+                Point3D b = e.getB();
+
+                a.setZ(a.getZ() + step);
+                b.setZ(b.getZ() + step);
+            }
+        }
+    }
+
     private Point3D projectPoint(Point3D point) {
-        float[][] transformedCoords = MatrixMultiplier.multiplyMatrices(getTranslationMatrix(), rotatePoint(point));
-        Point3D pointTransformed = new Point3D(transformedCoords);
-        if (pointTransformed.getZ() <= (-1) * focalLen) {
+        if (point.getZ() <= (-1) * focalLen) {
             return null;
         }
-        pointTransformed.coords = MatrixMultiplier.multiplyMatrices(getProjectionMatrix(), pointTransformed.coords);
+        Point3D pointTransformed = new Point3D(MatrixMultiplier.multiplyMatrices(getProjectionMatrix(), point.coords));
         return pointTransformed;
-    }
-
-    private float[][] rotatePoint(Point3D point) {
-
-        float[][] rotX = {
-            {1.0f, 0.0f, 0.0f, 0.0f},
-            {0.0f, cos(angleX), -sin(angleX), 0.0f},
-            {0.0f, sin(angleX), cos(angleX), 0.0f},
-            {0.0f, 0.0f, 0.0f, 1.0f}
-        };
-        float[][] rotY = {
-            {cos(angleY), 0.0f, sin(angleY), 0.0f},
-            {0.0f, 1.0f, 0.0f, 0.0f},
-            {-sin(angleY), 0.0f, cos(angleY), 0.0f},
-            {0.0f, 0.0f, 0.0f, 1.0f}
-        };
-        float[][] rotZ = {
-            {cos(angleZ), -sin(angleZ), 0.0f, 0.0f},
-            {sin(angleZ), cos(angleZ), 0.0f, 0.0f},
-            {0.0f, 0.0f, 1.0f, 0.0f},
-            {0.0f, 0.0f, 0.0f, 1.0f}
-        };
-
-        float[][] rotated = MatrixMultiplier.multiplyMatrices(rotY, MatrixMultiplier.multiplyMatrices(rotX, point.coords));
-        return MatrixMultiplier.multiplyMatrices(rotZ, rotated);
-    }
-
-    private float[][] getTranslationMatrix() {
-        float[][] mT = {
-            {1.0f, 0.0f, 0.0f, Tx},
-            {0.0f, 1.0f, 0.0f, Ty},
-            {0.0f, 0.0f, 1.0f, Tz},
-            {0.0f, 0.0f, 0.0f, 1.0f}
-        };
-
-        return mT;
     }
 
     private float[][] getProjectionMatrix() {
@@ -76,5 +107,17 @@ public class ProjectionUtils {
                 {0.0f, 0.0f, 1/focalLen, 1.0f}
         };
         return mP;
+    }
+
+    private void applyRotation(List<Cube> cubes, float[][] rot) {
+        for (Cube c : cubes) {
+            for (Edge e : c.getEdges()) {
+                Point3D a = e.getA();
+                Point3D b = e.getB();
+
+                a.coords = MatrixMultiplier.multiplyMatrices(rot, a.coords);
+                b.coords = MatrixMultiplier.multiplyMatrices(rot, b.coords);
+            }
+        }
     }
 }

@@ -27,6 +27,18 @@ public class Point3D {
         return coords[2][0];
     }
 
+    public void setX(float x) {
+        coords[0][0] = x;
+    }
+
+    public void setY(float y) {
+        coords[1][0] = y;
+    }
+
+    public void setZ(float z) {
+        coords[2][0] = z;
+    }
+
     public float getN() {
         return coords[3][0];
     }

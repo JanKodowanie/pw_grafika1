@@ -34,12 +34,6 @@ public class Camera extends PApplet {
     public void setup() {
         projector = new ProjectionUtils();
         projector.focalLen = INIT_FOCAL_LEN;
-        projector.Tx = 0.0f;
-        projector.Ty = 0.0f;
-        projector.Tz = 0.0f;
-        projector.angleX = 0.0f;
-        projector.angleY = 0.0f;
-        projector.angleZ = 0.0f;
         readCubes();
     }
 
@@ -155,51 +149,51 @@ public class Camera extends PApplet {
     }
 
     private void moveCamLeft() {
-        projector.Tx += TRANSLATION_STEP;
+        projector.translatePointsByX(cubes, TRANSLATION_STEP);
     }
 
     private void moveCamRight() {
-        projector.Tx -= TRANSLATION_STEP;
+        projector.translatePointsByX(cubes, (-1) * TRANSLATION_STEP);
     }
 
     private void moveCamDown() {
-        projector.Ty += TRANSLATION_STEP;
+        projector.translatePointsByY(cubes, TRANSLATION_STEP);
     }
 
     private void moveCamUp() {
-        projector.Ty -= TRANSLATION_STEP;
+        projector.translatePointsByY(cubes, (-1) * TRANSLATION_STEP);
     }
 
     private void moveCamForward() {
-        projector.Tz -= TRANSLATION_STEP;
+        projector.translatePointsByZ(cubes, (-1) * TRANSLATION_STEP);
     }
 
     private void moveCamBackwards() {
-        projector.Tz += TRANSLATION_STEP;
+        projector.translatePointsByZ(cubes,  TRANSLATION_STEP);
     }
 
     private void rollCameraClockwise() {
-        projector.angleZ -= ANGLE_STEP;
+        projector.rotatePointsByZ(cubes, (-1) * ANGLE_STEP);
     }
 
     private void rollCameraCounterClockwise() {
-        projector.angleZ += ANGLE_STEP;
+        projector.rotatePointsByZ(cubes, ANGLE_STEP);
     }
 
     private void yawCameraLeft() {
-        projector.angleY += ANGLE_STEP;
+        projector.rotatePointsByY(cubes, ANGLE_STEP);
     }
 
     private void yawCameraRight() {
-        projector.angleY -= ANGLE_STEP;
+        projector.rotatePointsByY(cubes, (-1) * ANGLE_STEP);
     }
 
     private void pitchCameraUp() {
-        projector.angleX -= ANGLE_STEP;
+        projector.rotatePointsByX(cubes, (-1) * ANGLE_STEP);
     }
 
     private void pitchCameraDown() {
-        projector.angleX += ANGLE_STEP;
+        projector.rotatePointsByX(cubes, ANGLE_STEP);
     }
 
     private void increaseZoom() {
