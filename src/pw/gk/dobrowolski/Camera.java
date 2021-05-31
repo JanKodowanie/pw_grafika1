@@ -16,7 +16,7 @@ public class Camera extends PApplet {
     final int HEIGHT = 900;
     final float INIT_FOCAL_LEN = 500.0f;
     final float MIN_FOCAL_LEN = 100.0f;
-    final float MAX_FOCAL_LEN = 3000.0f;
+    final float MAX_FOCAL_LEN = 4000.0f;
     final float FOCAL_STEP = -100.0f;
     final float TRANSLATION_STEP = 5.0f;
     final float ANGLE_STEP = (float) Math.PI / 60;
