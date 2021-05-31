@@ -17,7 +17,7 @@ public class Camera extends PApplet {
     final float INIT_FOCAL_LEN = 500.0f;
     final float MIN_FOCAL_LEN = 100.0f;
     final float MAX_FOCAL_LEN = 3000.0f;
-    final float FOCAL_STEP = 100.0f;
+    final float FOCAL_STEP = -100.0f;
     final float TRANSLATION_STEP = 5.0f;
     final float ANGLE_STEP = (float) Math.PI / 60;
 
@@ -203,14 +203,14 @@ public class Camera extends PApplet {
     }
 
     private void increaseZoom() {
-        projector.focalLen -= FOCAL_STEP;
+        projector.focalLen += FOCAL_STEP;
         if (projector.focalLen < MIN_FOCAL_LEN) {
             projector.focalLen = MIN_FOCAL_LEN;
         }
     }
 
     private void decreaseZoom() {
-        projector.focalLen += FOCAL_STEP;
+        projector.focalLen -= FOCAL_STEP;
         if (projector.focalLen > MAX_FOCAL_LEN) {
             projector.focalLen = MAX_FOCAL_LEN;
         }
