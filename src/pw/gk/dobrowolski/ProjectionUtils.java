@@ -15,14 +15,21 @@ public class ProjectionUtils {
     public float angleZ;
 
     public PVector getNormalizedProjection(Point3D point) {
-        float[][] res =  projectPoint(point);
-        Point3D pointTransformed = new Point3D(res);
+        Point3D pointTransformed = projectPoint(point);
+        if (pointTransformed == null) {
+            return null;
+        }
         return new PVector(pointTransformed.getX() / pointTransformed.getN(), pointTransformed.getY() / pointTransformed.getN());
     }
 
-    private float[][] projectPoint(Point3D point) {
-        float[][] projection = MatrixMultiplier.multiplyMatrices(getTranslationMatrix(), rotatePoint(point));
-        return MatrixMultiplier.multiplyMatrices(getProjectionMatrix(), projection);
+    private Point3D projectPoint(Point3D point) {
+        float[][] transformedCoords = MatrixMultiplier.multiplyMatrices(getTranslationMatrix(), rotatePoint(point));
+        Point3D pointTransformed = new Point3D(transformedCoords);
+        if (pointTransformed.getZ() <= (-1) * focalLen) {
+            return null;
+        }
+        pointTransformed.coords = MatrixMultiplier.multiplyMatrices(getProjectionMatrix(), pointTransformed.coords);
+        return pointTransformed;
     }
 
     private float[][] rotatePoint(Point3D point) {
